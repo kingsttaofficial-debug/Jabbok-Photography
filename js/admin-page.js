@@ -10,6 +10,118 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============================
     const ADMIN_CREDS = { username: 'admin', password: 'jabbok2026' };
     const AUTH_KEY = 'jabbok_admin_auth';
+    const ACCOUNTS_KEY = 'jabbok_admin_accounts';
+
+    // ============================
+    // DEFAULT CONTENT (mirrors index.html)
+    // ============================
+    const DEFAULT_SERVICES = [
+        {
+            id: 'default-svc-1', name: 'Wedding Photography', icon: 'heart',
+            desc: 'Capturing every precious moment of your special day with an artistic and documentary style approach.',
+            price: '1,50,000', priceLabel: 'Starting from',
+            features: ['Full day coverage', '300+ edited photographs', 'Online gallery', 'Engagement session included'],
+            isDefault: true, featured: true
+        },
+        {
+            id: 'default-svc-2', name: 'Portrait Sessions', icon: 'camera',
+            desc: 'Professional portrait sessions that bring out your personality and create images you\'ll treasure forever.',
+            price: '15,000', priceLabel: 'Starting from',
+            features: ['1-2 hour session', '50+ edited photographs', 'Multiple outfit changes', 'Location of your choice'],
+            isDefault: true
+        },
+        {
+            id: 'default-svc-3', name: 'Event Coverage', icon: 'people',
+            desc: 'Comprehensive event photography for corporate events, parties, concerts, and special occasions.',
+            price: '25,000', priceLabel: 'Starting from',
+            features: ['4-6 hour coverage', '200+ edited photographs', 'Quick turnaround', 'Commercial usage rights'],
+            isDefault: true
+        },
+        {
+            id: 'default-svc-4', name: 'Business Portraits', icon: 'briefcase',
+            desc: 'Elevate your brand with professional headshots and corporate photography for teams and individuals.',
+            price: '50,000', priceLabel: 'Starting from',
+            features: ['Studio & on-location sessions', 'Professional Headshots', 'Product & Promotion Shoots', 'Campaign Shoots'],
+            isDefault: true
+        },
+        {
+            id: 'default-svc-5', name: 'Wedding Videos', icon: 'video',
+            desc: 'Cinematic wedding films that capture the emotion and magic of your special day in motion.',
+            price: '1,00,000', priceLabel: 'Starting from',
+            features: ['Save the Date videos', 'Wedding Highlights', 'Candid Video', 'Traditional Video'],
+            isDefault: true
+        },
+        {
+            id: 'default-svc-6', name: 'Corporate Film', icon: 'folder',
+            desc: 'Professional corporate video production to showcase your brand story and company culture.',
+            price: '1,00,000', priceLabel: 'Starting from',
+            features: ['Promotional Video', 'Infrastructure Video', 'Employee Testimonies', 'Studio & on-location sessions'],
+            isDefault: true
+        }
+    ];
+
+    const DEFAULT_TESTIMONIALS = [
+        {
+            id: 'default-test-1', name: 'Sarah & James Mitchell', service: 'Wedding, June 2025',
+            text: 'Jabbok captured our wedding day so beautifully. Every photo tells a story, and looking through our album always brings tears of joy. Absolutely the best decision we made for our wedding!',
+            rating: 5, photo: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80', isDefault: true
+        },
+        {
+            id: 'default-test-2', name: 'David Chen', service: 'Corporate Portraits, 2025',
+            text: 'The corporate headshots Jabbok took for our team exceeded all expectations. Professional, creative, and so easy to work with. Our brand presence has never looked better!',
+            rating: 5, photo: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80', isDefault: true
+        },
+        {
+            id: 'default-test-3', name: 'Emma Roberts', service: 'Fine Art Prints, 2025',
+            text: 'I\'ve purchased three landscape prints for my living room, and they are absolutely stunning. The quality and detail in every image is remarkable. Jabbok has an incredible eye for nature.',
+            rating: 5, photo: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=100&q=80', isDefault: true
+        },
+        {
+            id: 'default-test-4', name: 'Michael Torres', service: 'Charity Gala, March 2025',
+            text: 'Our charity gala was beautifully documented by Jabbok. The photos were ready within days and captured the essence of the evening perfectly. Will definitely hire again!',
+            rating: 5, photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80', isDefault: true
+        }
+    ];
+
+    const DEFAULT_BLOG = [
+        {
+            id: 'default-blog-1', title: '10 Tips for Stunning Golden Hour Photography', category: 'Tips & Tricks',
+            excerpt: 'Master the art of shooting during the magical golden hour with these simple yet powerful techniques...',
+            date: 'Mar 15, 2026', image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600&q=80', isDefault: true
+        },
+        {
+            id: 'default-blog-2', title: 'How to Prepare for Your Wedding Photoshoot', category: 'Weddings',
+            excerpt: 'Everything you need to know to make sure your wedding photos are absolutely perfect on the big day...',
+            date: 'Feb 28, 2026', image: 'https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=600&q=80', isDefault: true
+        },
+        {
+            id: 'default-blog-3', title: 'My Journey Capturing the Northern Lights', category: 'Behind the Scenes',
+            excerpt: 'A behind-the-scenes look at my recent expedition to Iceland in pursuit of the aurora borealis...',
+            date: 'Feb 10, 2026', image: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=600&q=80', isDefault: true
+        }
+    ];
+
+    const DEFAULT_PORTFOLIO = [
+        { id: 'default-port-1', title: 'Sacred Rituals', category: 'weddings', dataUrl: 'https://images.unsplash.com/photo-1583089892943-e02e5b017b6a?w=600&q=80', isDefault: true },
+        { id: 'default-port-2', title: 'Holy Vows', category: 'weddings', dataUrl: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=600&q=80', isDefault: true },
+        { id: 'default-port-3', title: 'Divine Union', category: 'weddings', dataUrl: 'https://images.unsplash.com/photo-1591604466107-ec97de577aff?w=600&q=80', isDefault: true },
+        { id: 'default-port-4', title: 'Grand Gala', category: 'events', dataUrl: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&q=80', isDefault: true },
+        { id: 'default-port-5', title: 'Eternal Bond', category: 'weddings', dataUrl: 'https://images.unsplash.com/photo-1604604557852-789b0819e45e?w=600&q=80', isDefault: true },
+        { id: 'default-port-6', title: 'Bold & Timeless', category: 'portraits', dataUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=600&q=80', isDefault: true },
+        { id: 'default-port-7', title: 'Business Vision', category: 'corporate', dataUrl: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=600&q=80', isDefault: true },
+        { id: 'default-port-8', title: 'Night Lights', category: 'events', dataUrl: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600&q=80', isDefault: true },
+        { id: 'default-port-9', title: 'Golden Hour', category: 'portraits', dataUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=600&q=80', isDefault: true },
+        { id: 'default-port-10', title: 'Team Spirit', category: 'corporate', dataUrl: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&q=80', isDefault: true },
+        { id: 'default-port-11', title: 'Together Forever', category: 'weddings', dataUrl: 'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=600&q=80', isDefault: true },
+        { id: 'default-port-12', title: 'Celebration Night', category: 'events', dataUrl: 'https://images.unsplash.com/photo-1505236858219-8359eb29e329?w=600&q=80', isDefault: true }
+    ];
+
+    const DEFAULT_HERO_IMAGES = [
+        { id: 'default-hero-1', dataUrl: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=1920&q=80', name: 'Wedding ceremony', isDefault: true },
+        { id: 'default-hero-2', dataUrl: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=1920&q=80', name: 'Wedding celebration', isDefault: true },
+        { id: 'default-hero-3', dataUrl: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1920&q=80', name: 'Nature landscape', isDefault: true },
+        { id: 'default-hero-4', dataUrl: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=1920&q=80', name: 'Portrait', isDefault: true }
+    ];
 
     // ============================
     // STORAGE KEYS (shared with main site)
@@ -94,6 +206,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Simple hash for password (not production-grade, but good for localStorage demo)
+    async function hashPassword(password) {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(password + 'jabbok_salt_2026');
+        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
 
     // ============================
     // LOGIN SYSTEM
@@ -102,6 +223,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const dashboard = document.getElementById('adminDashboard');
     const loginForm = document.getElementById('loginForm');
     const loginError = document.getElementById('loginError');
+    const registerScreen = document.getElementById('registerScreen');
+    const registerForm = document.getElementById('registerForm');
+    const registerError = document.getElementById('registerError');
+    const registerToggleBtn = document.getElementById('registerToggleBtn');
+    const backToLoginBtn = document.getElementById('backToLoginBtn');
+
+    function getAccounts() {
+        try { return JSON.parse(localStorage.getItem(ACCOUNTS_KEY)) || []; } catch { return []; }
+    }
+    function saveAccounts(accounts) {
+        store(ACCOUNTS_KEY, accounts);
+    }
 
     function checkAuth() {
         const auth = loadObj(AUTH_KEY);
@@ -123,91 +256,104 @@ document.addEventListener('DOMContentLoaded', () => {
         if (auth.photo) {
             avatarEl.innerHTML = `<img src="${auth.photo}" alt="${auth.name || 'Admin'}">`;
         } else {
-            avatarEl.textContent = (auth.name || auth.username || 'A').charAt(0).toUpperCase();
+            avatarEl.textContent = (auth.name || auth.username || auth.email || 'A').charAt(0).toUpperCase();
         }
 
         initAdminCMS();
     }
 
-    // Username/password login
-    loginForm.addEventListener('submit', (e) => {
+    // Toggle between login and register views
+    registerToggleBtn.addEventListener('click', () => {
+        loginForm.parentElement.querySelector('.login-field').parentElement.style.display = 'none';
+        // Hide login form fields and show register
+        loginForm.style.display = 'none';
+        document.querySelector('.login-divider').style.display = 'none';
+        registerToggleBtn.style.display = 'none';
+        registerScreen.style.display = 'block';
+        loginError.style.display = 'none';
+    });
+
+    backToLoginBtn.addEventListener('click', () => {
+        registerScreen.style.display = 'none';
+        loginForm.style.display = '';
+        document.querySelector('.login-divider').style.display = '';
+        registerToggleBtn.style.display = '';
+        registerError.style.display = 'none';
+    });
+
+    // Username/password login (supports both default admin creds AND registered email accounts)
+    loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const username = document.getElementById('loginUsername').value.trim();
+        const usernameOrEmail = document.getElementById('loginUsername').value.trim();
         const password = document.getElementById('loginPassword').value;
 
-        if (username === ADMIN_CREDS.username && password === ADMIN_CREDS.password) {
-            const auth = { loggedIn: true, method: 'credentials', username, name: 'Admin' };
+        // Check default admin credentials
+        if (usernameOrEmail === ADMIN_CREDS.username && password === ADMIN_CREDS.password) {
+            const auth = { loggedIn: true, method: 'credentials', username: usernameOrEmail, name: 'Admin' };
+            store(AUTH_KEY, auth);
+            loginError.style.display = 'none';
+            showDashboard(auth);
+            return;
+        }
+
+        // Check registered email accounts
+        const accounts = getAccounts();
+        const hashedPw = await hashPassword(password);
+        const account = accounts.find(a => (a.email === usernameOrEmail || a.username === usernameOrEmail) && a.passwordHash === hashedPw);
+
+        if (account) {
+            const auth = { loggedIn: true, method: 'email', email: account.email, name: account.name, username: account.email };
             store(AUTH_KEY, auth);
             loginError.style.display = 'none';
             showDashboard(auth);
         } else {
+            loginError.textContent = 'Invalid username/email or password.';
             loginError.style.display = 'block';
         }
     });
 
-    // Google Sign-In
-    document.getElementById('googleLoginBtn').addEventListener('click', () => {
-        // Google Identity Services - using popup OAuth flow
-        // For production, replace with your actual Google Client ID
-        const CLIENT_ID = localStorage.getItem('jabbok_google_client_id') || '';
+    // Registration form
+    registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('regEmail').value.trim();
+        const name = document.getElementById('regName').value.trim();
+        const password = document.getElementById('regPassword').value;
+        const confirmPassword = document.getElementById('regConfirmPassword').value;
 
-        if (!CLIENT_ID) {
-            // Fallback: simulate Google login for demo (no client ID configured)
-            const auth = {
-                loggedIn: true,
-                method: 'google',
-                name: 'Google User',
-                email: 'admin@jabbokphotography.com',
-                photo: null
-            };
-            store(AUTH_KEY, auth);
-            showDashboard(auth);
-            toast('Signed in with Google (demo mode)');
+        if (!email || !name) {
+            registerError.textContent = 'Email and name are required.';
+            registerError.style.display = 'block';
+            return;
+        }
+        if (password.length < 6) {
+            registerError.textContent = 'Password must be at least 6 characters.';
+            registerError.style.display = 'block';
+            return;
+        }
+        if (password !== confirmPassword) {
+            registerError.textContent = 'Passwords do not match.';
+            registerError.style.display = 'block';
             return;
         }
 
-        // Real Google OAuth flow
-        const redirectUri = window.location.origin + window.location.pathname;
-        const scope = 'openid email profile';
-        const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${encodeURIComponent(scope)}`;
-        window.location.href = authUrl;
+        const accounts = getAccounts();
+        if (accounts.find(a => a.email === email)) {
+            registerError.textContent = 'An account with this email already exists.';
+            registerError.style.display = 'block';
+            return;
+        }
+
+        const hashedPw = await hashPassword(password);
+        accounts.push({ email, name, passwordHash: hashedPw, createdAt: new Date().toISOString() });
+        saveAccounts(accounts);
+
+        // Auto-login after registration
+        const auth = { loggedIn: true, method: 'email', email, name, username: email };
+        store(AUTH_KEY, auth);
+        registerError.style.display = 'none';
+        toast('Account created successfully!');
+        showDashboard(auth);
     });
-
-    // Handle Google OAuth redirect
-    function handleGoogleRedirect() {
-        const hash = window.location.hash;
-        if (!hash || !hash.includes('access_token')) return false;
-
-        const params = new URLSearchParams(hash.substring(1));
-        const accessToken = params.get('access_token');
-        if (!accessToken) return false;
-
-        // Clear the hash
-        history.replaceState(null, '', window.location.pathname);
-
-        // Fetch user info from Google
-        fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
-            headers: { Authorization: `Bearer ${accessToken}` }
-        })
-        .then(r => r.json())
-        .then(user => {
-            const auth = {
-                loggedIn: true,
-                method: 'google',
-                name: user.name || user.email,
-                email: user.email,
-                photo: user.picture || null
-            };
-            store(AUTH_KEY, auth);
-            showDashboard(auth);
-            toast('Signed in with Google!');
-        })
-        .catch(() => {
-            toast('Google sign-in failed');
-        });
-
-        return true;
-    }
 
     // Logout
     document.getElementById('logoutBtn').addEventListener('click', () => {
@@ -216,8 +362,30 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.add('login-page');
         dashboard.style.display = 'none';
         loginScreen.style.display = '';
+        // Reset forms
+        loginForm.style.display = '';
+        registerScreen.style.display = 'none';
+        if (document.querySelector('.login-divider')) document.querySelector('.login-divider').style.display = '';
+        if (registerToggleBtn) registerToggleBtn.style.display = '';
         toast('Logged out');
     });
+
+
+    // ============================
+    // HELPER: merge defaults with user data
+    // ============================
+    function getWithDefaults(key, defaults, deletedKey) {
+        const userItems = load(key);
+        const deletedIds = deletedKey ? load(deletedKey) : [];
+        // Filter out defaults that have been explicitly deleted
+        const activeDefaults = defaults.filter(d => !deletedIds.includes(d.id));
+        // Combine: user items first, then remaining defaults
+        return [...activeDefaults, ...userItems];
+    }
+
+    function getUserOnly(key) {
+        return load(key);
+    }
 
 
     // ============================
@@ -275,6 +443,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function renderHero() {
             const heroData = loadObj(KEYS.hero) || { video: null, images: [] };
+            const deletedHeroIds = load(KEYS.heroDeleted);
 
             // Video
             heroVideoPreview.innerHTML = '';
@@ -299,26 +468,37 @@ document.addEventListener('DOMContentLoaded', () => {
                 heroVideoBadge.textContent = 'None';
             }
 
-            // Images
+            // Combine default + custom images
+            const activeDefaults = DEFAULT_HERO_IMAGES.filter(d => !deletedHeroIds.includes(d.id));
+            const allImages = [...activeDefaults, ...heroData.images];
+
             heroImageList.innerHTML = '';
-            heroData.images.forEach(img => {
+            allImages.forEach(img => {
                 const card = document.createElement('div');
                 card.className = 'media-card';
+                const isDefault = img.isDefault;
                 card.innerHTML = `
                     <img src="${img.dataUrl}" alt="${img.name}">
-                    <div class="media-info"><strong>${img.name}</strong><br><span>Custom Upload</span></div>
+                    <div class="media-info"><strong>${img.name}</strong><br><span>${isDefault ? 'Default' : 'Custom Upload'}</span></div>
                     <button class="media-delete">&times;</button>
                 `;
                 card.querySelector('.media-delete').addEventListener('click', () => {
-                    const d = loadObj(KEYS.hero) || { video: null, images: [] };
-                    d.images = d.images.filter(i => i.id !== img.id);
-                    store(KEYS.hero, d);
+                    if (isDefault) {
+                        // Mark default as deleted
+                        const deleted = load(KEYS.heroDeleted);
+                        deleted.push(img.id);
+                        store(KEYS.heroDeleted, deleted);
+                    } else {
+                        const d = loadObj(KEYS.hero) || { video: null, images: [] };
+                        d.images = d.images.filter(i => i.id !== img.id);
+                        store(KEYS.hero, d);
+                    }
                     renderHero();
                     toast('Image removed');
                 });
                 heroImageList.appendChild(card);
             });
-            heroImageCount.textContent = heroData.images.length;
+            heroImageCount.textContent = allImages.length;
         }
 
 
@@ -366,44 +546,58 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         function renderPortfolio() {
-            const photos = load(KEYS.portfolio);
-            portfolioList.innerHTML = '';
-            portfolioCount.textContent = photos.length;
-            portfolioEmpty.style.display = photos.length === 0 ? 'block' : 'none';
+            const deletedIds = load(KEYS.portfolioDeleted);
+            const userPhotos = load(KEYS.portfolio);
+            const activeDefaults = DEFAULT_PORTFOLIO.filter(d => !deletedIds.includes(d.id));
+            const allPhotos = [...activeDefaults, ...userPhotos];
 
-            photos.forEach((photo, idx) => {
+            portfolioList.innerHTML = '';
+            portfolioCount.textContent = allPhotos.length;
+            portfolioEmpty.style.display = allPhotos.length === 0 ? 'block' : 'none';
+
+            allPhotos.forEach((photo, idx) => {
                 const card = document.createElement('div');
                 card.className = 'media-card';
-                card.draggable = true;
+                const isDefault = photo.isDefault;
+                card.draggable = !isDefault;
                 card.dataset.idx = idx;
                 card.innerHTML = `
                     <img src="${photo.dataUrl}" alt="${photo.title}">
-                    <span class="drag-handle">&#9776;</span>
-                    <div class="media-info"><strong>${photo.title}</strong><br><span>${CAT_LABELS[photo.category] || photo.category}</span></div>
+                    ${!isDefault ? '<span class="drag-handle">&#9776;</span>' : ''}
+                    <div class="media-info"><strong>${photo.title}</strong><br><span>${CAT_LABELS[photo.category] || photo.category}${isDefault ? ' (Default)' : ''}</span></div>
                     <button class="media-delete">&times;</button>
                 `;
                 card.querySelector('.media-delete').addEventListener('click', () => {
-                    const arr = load(KEYS.portfolio);
-                    arr.splice(idx, 1);
-                    store(KEYS.portfolio, arr);
+                    if (isDefault) {
+                        const deleted = load(KEYS.portfolioDeleted);
+                        deleted.push(photo.id);
+                        store(KEYS.portfolioDeleted, deleted);
+                    } else {
+                        const arr = load(KEYS.portfolio);
+                        const userIdx = arr.findIndex(p => p.id === photo.id);
+                        if (userIdx !== -1) arr.splice(userIdx, 1);
+                        store(KEYS.portfolio, arr);
+                    }
                     renderPortfolio();
                     toast('Photo deleted');
                 });
-                card.addEventListener('dragstart', e => { e.dataTransfer.setData('text/plain', idx); card.classList.add('dragging'); });
-                card.addEventListener('dragend', () => card.classList.remove('dragging'));
-                card.addEventListener('dragover', e => e.preventDefault());
-                card.addEventListener('drop', e => {
-                    e.preventDefault();
-                    const fromIdx = parseInt(e.dataTransfer.getData('text/plain'));
-                    const toIdx = idx;
-                    if (fromIdx === toIdx) return;
-                    const arr = load(KEYS.portfolio);
-                    const [moved] = arr.splice(fromIdx, 1);
-                    arr.splice(toIdx, 0, moved);
-                    store(KEYS.portfolio, arr);
-                    renderPortfolio();
-                    toast('Photos reordered!');
-                });
+                if (!isDefault) {
+                    card.addEventListener('dragstart', e => { e.dataTransfer.setData('text/plain', idx); card.classList.add('dragging'); });
+                    card.addEventListener('dragend', () => card.classList.remove('dragging'));
+                    card.addEventListener('dragover', e => e.preventDefault());
+                    card.addEventListener('drop', e => {
+                        e.preventDefault();
+                        const fromIdx = parseInt(e.dataTransfer.getData('text/plain'));
+                        const toIdx = idx;
+                        if (fromIdx === toIdx) return;
+                        const arr = load(KEYS.portfolio);
+                        const [moved] = arr.splice(fromIdx, 1);
+                        arr.splice(toIdx, 0, moved);
+                        store(KEYS.portfolio, arr);
+                        renderPortfolio();
+                        toast('Photos reordered!');
+                    });
+                }
                 portfolioList.appendChild(card);
             });
         }
@@ -443,7 +637,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 aboutImagePreview.appendChild(row);
             } else {
-                aboutImagePreview.innerHTML = '<p style="color:var(--color-text-muted);font-size:0.85rem;">Using default image. Upload a new one above.</p>';
+                const row = document.createElement('div');
+                row.className = 'media-row';
+                row.innerHTML = `
+                    <img src="https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=600&q=80" alt="Default About" style="width:80px;height:56px;object-fit:cover;border-radius:4px;">
+                    <div class="media-row-info"><strong>Default About Image</strong><span>Upload a new one above to replace</span></div>
+                `;
+                aboutImagePreview.appendChild(row);
             }
         }
 
@@ -494,30 +694,41 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         function renderTestimonials() {
-            const items = load(KEYS.testimonials);
-            testimonialListEl.innerHTML = '';
-            testimonialCountEl.textContent = items.length;
-            testimonialEmptyEl.style.display = items.length === 0 ? 'block' : 'none';
+            const deletedIds = load(KEYS.testimonialsDeleted);
+            const userItems = load(KEYS.testimonials);
+            const activeDefaults = DEFAULT_TESTIMONIALS.filter(d => !deletedIds.includes(d.id));
+            const allItems = [...activeDefaults, ...userItems];
 
-            items.forEach(t => {
+            testimonialListEl.innerHTML = '';
+            testimonialCountEl.textContent = allItems.length;
+            testimonialEmptyEl.style.display = allItems.length === 0 ? 'block' : 'none';
+
+            allItems.forEach(t => {
                 const card = document.createElement('div');
                 card.className = 'admin-testimonial-card';
+                const isDefault = t.isDefault;
                 const photoHTML = t.photo
                     ? `<img class="tc-avatar" src="${t.photo}" alt="${t.name}">`
                     : `<div class="tc-avatar-placeholder">${t.name.charAt(0)}</div>`;
                 card.innerHTML = `
                     ${photoHTML}
                     <div class="tc-body">
-                        <strong>${t.name}</strong>
+                        <strong>${t.name}</strong>${isDefault ? ' <span style="color:var(--color-accent);font-size:0.7rem;">(Default)</span>' : ''}
                         <div class="tc-meta">${t.service || ''} &bull; ${t.rating} stars</div>
                         <p>${t.text}</p>
                     </div>
                     <button class="tc-delete">&times;</button>
                 `;
                 card.querySelector('.tc-delete').addEventListener('click', () => {
-                    let data = load(KEYS.testimonials);
-                    data = data.filter(x => x.id !== t.id);
-                    store(KEYS.testimonials, data);
+                    if (isDefault) {
+                        const deleted = load(KEYS.testimonialsDeleted);
+                        deleted.push(t.id);
+                        store(KEYS.testimonialsDeleted, deleted);
+                    } else {
+                        let data = load(KEYS.testimonials);
+                        data = data.filter(x => x.id !== t.id);
+                        store(KEYS.testimonials, data);
+                    }
                     renderTestimonials();
                     toast('Testimonial removed');
                 });
@@ -547,8 +758,18 @@ document.addEventListener('DOMContentLoaded', () => {
             let arr = load(KEYS.services);
 
             if (editId) {
-                const idx = arr.findIndex(s => s.id === editId);
-                if (idx !== -1) arr[idx] = { ...arr[idx], name, desc, price, priceLabel, features, icon };
+                // Check if editing a default service — move it to user data
+                const defaultSvc = DEFAULT_SERVICES.find(s => s.id === editId);
+                if (defaultSvc) {
+                    // Delete from defaults, add as user item
+                    const deleted = load(KEYS.servicesDeleted);
+                    deleted.push(editId);
+                    store(KEYS.servicesDeleted, deleted);
+                    arr.push({ id: uid(), name, desc, price, priceLabel, features, icon });
+                } else {
+                    const idx = arr.findIndex(s => s.id === editId);
+                    if (idx !== -1) arr[idx] = { ...arr[idx], name, desc, price, priceLabel, features, icon };
+                }
                 serviceEditIdEl.value = '';
                 document.getElementById('serviceAddBtn').querySelector('span').textContent = 'Add Service';
             } else {
@@ -565,17 +786,22 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         function renderServices() {
-            const items = load(KEYS.services);
-            serviceListEl.innerHTML = '';
-            serviceCountEl.textContent = items.length;
-            serviceEmptyEl.style.display = items.length === 0 ? 'block' : 'none';
+            const deletedIds = load(KEYS.servicesDeleted);
+            const userItems = load(KEYS.services);
+            const activeDefaults = DEFAULT_SERVICES.filter(d => !deletedIds.includes(d.id));
+            const allItems = [...activeDefaults, ...userItems];
 
-            items.forEach(svc => {
+            serviceListEl.innerHTML = '';
+            serviceCountEl.textContent = allItems.length;
+            serviceEmptyEl.style.display = allItems.length === 0 ? 'block' : 'none';
+
+            allItems.forEach(svc => {
                 const card = document.createElement('div');
                 card.className = 'admin-service-card';
+                const isDefault = svc.isDefault;
                 card.innerHTML = `
                     <div class="sc-info">
-                        <strong>${svc.name}</strong><span>&#8377;${svc.price || '0'}</span>
+                        <strong>${svc.name}</strong>${isDefault ? ' <span style="color:var(--color-accent);font-size:0.7rem;">(Default)</span>' : ''}<span>&#8377;${svc.price || '0'}</span>
                         <p>${svc.desc || ''}</p>
                     </div>
                     <div class="sc-actions">
@@ -595,9 +821,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     toast('Editing: ' + svc.name);
                 });
                 card.querySelector('.sc-del').addEventListener('click', () => {
-                    let data = load(KEYS.services);
-                    data = data.filter(x => x.id !== svc.id);
-                    store(KEYS.services, data);
+                    if (isDefault) {
+                        const deleted = load(KEYS.servicesDeleted);
+                        deleted.push(svc.id);
+                        store(KEYS.servicesDeleted, deleted);
+                    } else {
+                        let data = load(KEYS.services);
+                        data = data.filter(x => x.id !== svc.id);
+                        store(KEYS.services, data);
+                    }
                     renderServices();
                     toast('Service deleted');
                 });
@@ -619,6 +851,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('contactPhone').value = data.phone || '';
                 document.getElementById('contactEmail').value = data.email || '';
                 document.getElementById('contactAddress').value = data.address || '';
+            } else {
+                // Load defaults from index.html
+                document.getElementById('contactPhone').value = '+1 (234) 567-890';
+                document.getElementById('contactEmail').value = 'hello@mercyphotography.com';
+                document.getElementById('contactAddress').value = '123 Photography Lane, New York, NY';
             }
         }
 
@@ -709,8 +946,17 @@ document.addEventListener('DOMContentLoaded', () => {
             let arr = load(KEYS.blog);
 
             if (editId) {
-                const idx = arr.findIndex(b => b.id === editId);
-                if (idx !== -1) arr[idx] = { ...arr[idx], title, category, excerpt, date: dateStr, image: blogImageData || arr[idx].image };
+                // Check if editing a default blog post
+                const defaultBlog = DEFAULT_BLOG.find(b => b.id === editId);
+                if (defaultBlog) {
+                    const deleted = load(KEYS.blogDeleted);
+                    deleted.push(editId);
+                    store(KEYS.blogDeleted, deleted);
+                    arr.push({ id: uid(), title, category, excerpt, date: dateStr, image: blogImageData || defaultBlog.image });
+                } else {
+                    const idx = arr.findIndex(b => b.id === editId);
+                    if (idx !== -1) arr[idx] = { ...arr[idx], title, category, excerpt, date: dateStr, image: blogImageData || arr[idx].image };
+                }
                 blogEditIdEl.value = '';
                 document.getElementById('blogAddBtn').querySelector('span').textContent = 'Add Blog Post';
             } else {
@@ -729,19 +975,24 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         function renderBlogs() {
-            const items = load(KEYS.blog);
-            blogListEl.innerHTML = '';
-            blogCountEl.textContent = items.length;
-            blogEmptyEl.style.display = items.length === 0 ? 'block' : 'none';
+            const deletedIds = load(KEYS.blogDeleted);
+            const userItems = load(KEYS.blog);
+            const activeDefaults = DEFAULT_BLOG.filter(d => !deletedIds.includes(d.id));
+            const allItems = [...activeDefaults, ...userItems];
 
-            items.forEach(blog => {
+            blogListEl.innerHTML = '';
+            blogCountEl.textContent = allItems.length;
+            blogEmptyEl.style.display = allItems.length === 0 ? 'block' : 'none';
+
+            allItems.forEach(blog => {
                 const card = document.createElement('div');
                 card.className = 'admin-blog-card';
+                const isDefault = blog.isDefault;
                 const imgHTML = blog.image ? `<img src="${blog.image}" alt="${blog.title}">` : '<div class="blog-card-placeholder">&#9998;</div>';
                 card.innerHTML = `
                     ${imgHTML}
                     <div class="blog-card-body">
-                        <strong>${blog.title}</strong>
+                        <strong>${blog.title}</strong>${isDefault ? ' <span style="color:var(--color-accent);font-size:0.7rem;">(Default)</span>' : ''}
                         <div class="blog-card-meta">${blog.category} &bull; ${blog.date}</div>
                         <p>${blog.excerpt || ''}</p>
                     </div>
@@ -765,9 +1016,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     toast('Editing: ' + blog.title);
                 });
                 card.querySelector('.bc-del').addEventListener('click', () => {
-                    let data = load(KEYS.blog);
-                    data = data.filter(x => x.id !== blog.id);
-                    store(KEYS.blog, data);
+                    if (isDefault) {
+                        const deleted = load(KEYS.blogDeleted);
+                        deleted.push(blog.id);
+                        store(KEYS.blogDeleted, deleted);
+                    } else {
+                        let data = load(KEYS.blog);
+                        data = data.filter(x => x.id !== blog.id);
+                        store(KEYS.blog, data);
+                    }
                     renderBlogs();
                     toast('Blog post deleted');
                 });
@@ -862,8 +1119,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============================
     // BOOT
     // ============================
-    if (!handleGoogleRedirect()) {
-        checkAuth();
-    }
+    checkAuth();
 
 });
