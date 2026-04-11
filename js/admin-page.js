@@ -1132,6 +1132,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             ${!msg.read ? '<span style="background:#f5c518;color:#0a0a0a;padding:1px 8px;border-radius:10px;font-size:0.65rem;font-weight:600;margin-left:8px;">NEW</span>' : ''}
                             <div style="color:var(--color-text-muted);font-size:0.8rem;margin-top:2px;">
                                 <a href="mailto:${msg.email || ''}" style="color:var(--color-accent);text-decoration:none;">${msg.email || ''}</a>
+                                ${msg.phone ? ' &bull; <a href="tel:' + msg.phone + '" style="color:var(--color-accent);text-decoration:none;">&#128222; ' + msg.phone + '</a>' : ''}
                                 ${msg.service ? ' &bull; ' + msg.service : ''}
                             </div>
                         </div>

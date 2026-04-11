@@ -204,7 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <span class="blog-category">${b.category || ''}</span>
                             <h3>${b.title || ''}</h3>
                             <p>${b.excerpt || ''}</p>
-                            <a href="#" class="blog-link">Read More <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+                            <a href="blog.html" class="blog-link">Read More <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
                         </div>
                     `;
                     blogGrid.appendChild(article);
@@ -584,6 +584,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 id: Date.now().toString(36) + Math.random().toString(36).slice(2,7),
                 name: name,
                 email: email,
+                phone: formData.get('phone') || '',
                 service: formData.get('service') || '',
                 message: formData.get('message') || '',
                 date: new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
