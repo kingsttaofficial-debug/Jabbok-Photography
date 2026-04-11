@@ -1101,6 +1101,74 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
         // ============================================================
+        // 9. MESSAGES (Contact Form Submissions)
+        // ============================================================
+        const messageListEl = document.getElementById('messageList');
+        const messageEmptyEl = document.getElementById('messageEmpty');
+        const msgBadgeEl = document.getElementById('msgBadge');
+
+        function renderMessages() {
+            const messages = load('jabbok_messages');
+            if (!messageListEl) return;
+            messageListEl.innerHTML = '';
+            const unreadCount = messages.filter(m => !m.read).length;
+
+            if (msgBadgeEl) {
+                msgBadgeEl.textContent = unreadCount;
+                msgBadgeEl.style.display = unreadCount > 0 ? 'inline' : 'none';
+            }
+
+            messageEmptyEl.style.display = messages.length === 0 ? 'block' : 'none';
+
+            messages.forEach(msg => {
+                const card = document.createElement('div');
+                card.className = 'admin-msg-card';
+                card.style.cssText = `background:${msg.read ? 'var(--color-bg)' : 'rgba(245,197,24,0.05)'};border:1px solid ${msg.read ? 'var(--color-border)' : 'rgba(245,197,24,0.2)'};border-radius:var(--radius);padding:16px;margin-bottom:12px;position:relative;`;
+
+                card.innerHTML = `
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
+                        <div>
+                            <strong style="font-size:1rem;">${msg.name || 'Anonymous'}</strong>
+                            ${!msg.read ? '<span style="background:#f5c518;color:#0a0a0a;padding:1px 8px;border-radius:10px;font-size:0.65rem;font-weight:600;margin-left:8px;">NEW</span>' : ''}
+                            <div style="color:var(--color-text-muted);font-size:0.8rem;margin-top:2px;">
+                                <a href="mailto:${msg.email || ''}" style="color:var(--color-accent);text-decoration:none;">${msg.email || ''}</a>
+                                ${msg.service ? ' &bull; ' + msg.service : ''}
+                            </div>
+                        </div>
+                        <span style="color:var(--color-text-muted);font-size:0.75rem;white-space:nowrap;">${msg.date || ''}</span>
+                    </div>
+                    <p style="color:var(--color-text);font-size:0.9rem;line-height:1.5;margin:8px 0 12px;">${msg.message || ''}</p>
+                    <div style="display:flex;gap:8px;">
+                        ${!msg.read ? '<button class="msg-read-btn" style="padding:5px 12px;background:transparent;border:1px solid var(--color-accent);color:var(--color-accent);border-radius:var(--radius);font-size:0.75rem;cursor:pointer;">Mark as Read</button>' : ''}
+                        <button class="msg-del-btn" style="padding:5px 12px;background:transparent;border:1px solid rgba(231,76,60,0.3);color:#e74c3c;border-radius:var(--radius);font-size:0.75rem;cursor:pointer;">Delete</button>
+                    </div>
+                `;
+
+                const readBtn = card.querySelector('.msg-read-btn');
+                if (readBtn) {
+                    readBtn.addEventListener('click', () => {
+                        let data = load('jabbok_messages');
+                        const found = data.find(m => m.id === msg.id);
+                        if (found) found.read = true;
+                        store('jabbok_messages', data);
+                        renderMessages();
+                        toast('Marked as read');
+                    });
+                }
+
+                card.querySelector('.msg-del-btn').addEventListener('click', () => {
+                    let data = load('jabbok_messages');
+                    data = data.filter(m => m.id !== msg.id);
+                    store('jabbok_messages', data);
+                    renderMessages();
+                    toast('Message deleted');
+                });
+
+                messageListEl.appendChild(card);
+            });
+        }
+
+        // ============================================================
         // INIT — Render all admin sections
         // ============================================================
         renderHero();
@@ -1112,6 +1180,7 @@ document.addEventListener('DOMContentLoaded', () => {
         renderBranches();
         renderBlogs();
         renderVideos();
+        renderMessages();
 
     } // end initAdminCMS
 

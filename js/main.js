@@ -184,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (blogGrid) {
             const defaultBlogCards = blogGrid.querySelectorAll('article.blog-card');
             deletedBlogs.forEach(id => {
-                const idx = parseInt(id.toString().replace('default-blog-', ''), 10);
+                const idx = parseInt(id.toString().replace('default-blog-', ''), 10) - 1;
                 if (!isNaN(idx) && defaultBlogCards[idx]) {
                     defaultBlogCards[idx].style.display = 'none';
                 }
@@ -220,7 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (heroSlider) {
             const defaultHeroSlides = heroSlider.querySelectorAll('.hero-slide');
             heroDeleted.forEach(id => {
-                const idx = parseInt(id.toString().replace('default-hero-', ''), 10);
+                const idx = parseInt(id.toString().replace('default-hero-', ''), 10) - 1;
                 if (!isNaN(idx) && defaultHeroSlides[idx]) {
                     defaultHeroSlides[idx].style.display = 'none';
                 }
@@ -252,7 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (galleryGrid) {
             const defaultGalleryItems = galleryGrid.querySelectorAll('.gallery-item');
             portDeleted.forEach(id => {
-                const idx = parseInt(id.toString().replace('default-port-', ''), 10);
+                const idx = parseInt(id.toString().replace('default-port-', ''), 10) - 1;
                 if (!isNaN(idx) && defaultGalleryItems[idx]) {
                     defaultGalleryItems[idx].style.display = 'none';
                 }
@@ -293,7 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (testimonialTrack) {
             const defaultTestCards = testimonialTrack.querySelectorAll('.testimonial-card');
             testDeleted.forEach(id => {
-                const idx = parseInt(id.toString().replace('default-test-', ''), 10);
+                const idx = parseInt(id.toString().replace('default-test-', ''), 10) - 1;
                 if (!isNaN(idx) && defaultTestCards[idx]) {
                     defaultTestCards[idx].style.display = 'none';
                 }
@@ -304,16 +304,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 savedTestimonials.forEach(t => {
                     const card = document.createElement('div');
                     card.className = 'testimonial-card';
+                    const ratingCount = parseInt(t.rating) || 5;
+                    const starsHtml = Array(ratingCount).fill(STAR_SVG).join('');
                     card.innerHTML = `
                         <div class="testimonial-stars">
-                            ${STAR_SVG}${STAR_SVG}${STAR_SVG}${STAR_SVG}${STAR_SVG}
+                            ${starsHtml}
                         </div>
                         <p class="testimonial-text">"${t.text || ''}"</p>
                         <div class="testimonial-author">
-                            <img src="${t.image || 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80'}" alt="${t.name || ''}">
+                            ${t.photo ? `<img src="${t.photo}" alt="${t.name || ''}">` : `<div style="width:50px;height:50px;border-radius:50%;background:rgba(245,197,24,0.15);display:flex;align-items:center;justify-content:center;color:#f5c518;font-weight:600;font-size:1.2rem;">${(t.name || 'A').charAt(0).toUpperCase()}</div>`}
                             <div>
                                 <strong>${t.name || 'Anonymous'}</strong>
-                                <span>${t.role || ''}</span>
+                                <span>${t.service || ''}</span>
                             </div>
                         </div>
                     `;
@@ -330,7 +332,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (servicesGrid) {
             const defaultSvcCards = servicesGrid.querySelectorAll('.service-card');
             svcDeleted.forEach(id => {
-                const idx = parseInt(id.toString().replace('default-svc-', ''), 10);
+                const idx = parseInt(id.toString().replace('default-svc-', ''), 10) - 1;
                 if (!isNaN(idx) && defaultSvcCards[idx]) {
                     defaultSvcCards[idx].style.display = 'none';
                 }
@@ -576,6 +578,19 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             formMessage.className = 'form-message success';
             formMessage.textContent = `Thank you, ${name}! Your message has been sent. I'll get back to you within 24 hours.`;
+
+            const messages = JSON.parse(localStorage.getItem('jabbok_messages') || '[]');
+            messages.unshift({
+                id: Date.now().toString(36) + Math.random().toString(36).slice(2,7),
+                name: name,
+                email: email,
+                service: formData.get('service') || '',
+                message: formData.get('message') || '',
+                date: new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+                read: false
+            });
+            localStorage.setItem('jabbok_messages', JSON.stringify(messages));
+
             contactForm.reset();
             submitBtn.disabled = false;
             submitBtn.querySelector('span').textContent = 'Send Message';
