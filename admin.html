@@ -533,6 +533,16 @@
                             <label>Studio Address</label>
                             <input type="text" id="contactAddress" placeholder="123 Photography Lane, New York, NY">
                         </div>
+                        <div class="admin-field">
+                            <label>WhatsApp Number <span style="color:var(--color-text-muted);font-weight:400;font-size:0.8rem;">(with country code, e.g. 919876543210)</span></label>
+                            <input type="text" id="contactWhatsApp" placeholder="919876543210">
+                        </div>
+                        <div class="admin-field" style="margin-top:4px;">
+                            <label class="toggle-label" style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+                                <input type="checkbox" id="whatsappRedirect" style="width:18px;height:18px;accent-color:#f5c518;">
+                                <span>Send contact form messages to WhatsApp</span>
+                            </label>
+                        </div>
                     </div>
                     <button class="btn btn-primary btn-full" id="contactSaveBtn"><span>Save Contact Details</span></button>
                 </div>

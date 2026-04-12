@@ -389,6 +389,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 const addressSpan = contactItems[2].querySelector('span');
                 if (addressSpan) addressSpan.textContent = contactData.address;
             }
+            // Update WhatsApp social links with admin number
+            if (contactData.whatsapp) {
+                const waLinks = document.querySelectorAll('.social-link.whatsapp, a[aria-label="WhatsApp"]');
+                waLinks.forEach(link => {
+                    link.href = 'https://wa.me/' + contactData.whatsapp;
+                    link.target = '_blank';
+                });
+            }
         }
     } catch (e) { /* ignore parse errors */ }
 
@@ -575,30 +583,65 @@ document.addEventListener('DOMContentLoaded', () => {
         submitBtn.disabled = true;
         submitBtn.querySelector('span').textContent = 'Sending...';
 
-        setTimeout(() => {
-            formMessage.className = 'form-message success';
-            formMessage.textContent = `Thank you, ${name}! Your message has been sent. I'll get back to you within 24 hours.`;
+        const phone = formData.get('phone') || '';
+        const service = formData.get('service') || '';
+        const message = formData.get('message') || '';
 
+        setTimeout(() => {
+            // Save to localStorage for admin Messages tab
             const messages = JSON.parse(localStorage.getItem('jabbok_messages') || '[]');
             messages.unshift({
                 id: Date.now().toString(36) + Math.random().toString(36).slice(2,7),
                 name: name,
                 email: email,
-                phone: formData.get('phone') || '',
-                service: formData.get('service') || '',
-                message: formData.get('message') || '',
+                phone: phone,
+                service: service,
+                message: message,
                 date: new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
                 read: false
             });
             localStorage.setItem('jabbok_messages', JSON.stringify(messages));
 
-            contactForm.reset();
-            submitBtn.disabled = false;
-            submitBtn.querySelector('span').textContent = 'Send Message';
+            // Check if WhatsApp redirect is enabled
+            const contactData = JSON.parse(localStorage.getItem('jabbok_contact') || 'null');
+            const waNumber = contactData && contactData.whatsapp ? contactData.whatsapp.replace(/[^0-9]/g, '') : '';
+            const waEnabled = contactData && contactData.whatsappRedirect;
 
-            setTimeout(() => {
-                formMessage.className = 'form-message';
-            }, 5000);
+            if (waEnabled && waNumber) {
+                // Build WhatsApp message
+                const waText = `*New Booking Inquiry — Jabbok Photography*\n\n` +
+                    `*Name:* ${name}\n` +
+                    `*Email:* ${email}\n` +
+                    (phone ? `*Phone:* ${phone}\n` : '') +
+                    (service ? `*Service:* ${service}\n` : '') +
+                    `*Message:* ${message}`;
+                const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(waText)}`;
+
+                formMessage.className = 'form-message success';
+                formMessage.textContent = `Thank you, ${name}! Redirecting you to WhatsApp to confirm your booking...`;
+
+                contactForm.reset();
+                submitBtn.disabled = false;
+                submitBtn.querySelector('span').textContent = 'Send Message';
+
+                // Open WhatsApp after a brief delay
+                setTimeout(() => {
+                    window.open(waUrl, '_blank');
+                    formMessage.className = 'form-message';
+                }, 2000);
+            } else {
+                // Normal submission (no WhatsApp)
+                formMessage.className = 'form-message success';
+                formMessage.textContent = `Thank you, ${name}! Your message has been sent. I'll get back to you within 24 hours.`;
+
+                contactForm.reset();
+                submitBtn.disabled = false;
+                submitBtn.querySelector('span').textContent = 'Send Message';
+
+                setTimeout(() => {
+                    formMessage.className = 'form-message';
+                }, 5000);
+            }
         }, 1500);
     });
 

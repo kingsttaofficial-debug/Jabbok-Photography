@@ -851,11 +851,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('contactPhone').value = data.phone || '';
                 document.getElementById('contactEmail').value = data.email || '';
                 document.getElementById('contactAddress').value = data.address || '';
+                document.getElementById('contactWhatsApp').value = data.whatsapp || '';
+                document.getElementById('whatsappRedirect').checked = !!data.whatsappRedirect;
             } else {
                 // Load defaults from index.html
                 document.getElementById('contactPhone').value = '+1 (234) 567-890';
                 document.getElementById('contactEmail').value = 'hello@mercyphotography.com';
                 document.getElementById('contactAddress').value = '123 Photography Lane, New York, NY';
+                document.getElementById('contactWhatsApp').value = '';
+                document.getElementById('whatsappRedirect').checked = false;
             }
         }
 
@@ -863,7 +867,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const phone = document.getElementById('contactPhone').value.trim();
             const email = document.getElementById('contactEmail').value.trim();
             const address = document.getElementById('contactAddress').value.trim();
-            store(KEYS.contact, { phone, email, address });
+            const whatsapp = document.getElementById('contactWhatsApp').value.trim().replace(/[^0-9]/g, '');
+            const whatsappRedirect = document.getElementById('whatsappRedirect').checked;
+            if (whatsappRedirect && !whatsapp) {
+                toast('Please enter a WhatsApp number to enable redirect');
+                return;
+            }
+            store(KEYS.contact, { phone, email, address, whatsapp, whatsappRedirect });
             toast('Contact details saved!');
         });
 
@@ -1109,6 +1119,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function renderMessages() {
             const messages = load('jabbok_messages');
+            const contactData = loadObj(KEYS.contact) || {};
+            const adminWA = contactData.whatsapp || '';
             if (!messageListEl) return;
             messageListEl.innerHTML = '';
             const unreadCount = messages.filter(m => !m.read).length;
@@ -1125,6 +1137,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 card.className = 'admin-msg-card';
                 card.style.cssText = `background:${msg.read ? 'var(--color-bg)' : 'rgba(245,197,24,0.05)'};border:1px solid ${msg.read ? 'var(--color-border)' : 'rgba(245,197,24,0.2)'};border-radius:var(--radius);padding:16px;margin-bottom:12px;position:relative;`;
 
+                // Build WhatsApp reply link for this message
+                const waReplyPhone = msg.phone ? msg.phone.replace(/[^0-9]/g, '') : '';
+                const waReplyText = encodeURIComponent(`Hi ${msg.name || ''},\nThank you for reaching out to Jabbok Photography regarding "${msg.service || 'your inquiry'}".\n\n`);
+                const waReplyBtn = waReplyPhone
+                    ? `<a href="https://wa.me/${waReplyPhone}?text=${waReplyText}" target="_blank" class="msg-wa-btn" style="padding:5px 12px;background:#25D366;border:none;color:#fff;border-radius:var(--radius);font-size:0.75rem;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:4px;">&#9742; Reply on WhatsApp</a>`
+                    : '';
+
                 card.innerHTML = `
                     <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
                         <div>
@@ -1139,8 +1158,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         <span style="color:var(--color-text-muted);font-size:0.75rem;white-space:nowrap;">${msg.date || ''}</span>
                     </div>
                     <p style="color:var(--color-text);font-size:0.9rem;line-height:1.5;margin:8px 0 12px;">${msg.message || ''}</p>
-                    <div style="display:flex;gap:8px;">
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
                         ${!msg.read ? '<button class="msg-read-btn" style="padding:5px 12px;background:transparent;border:1px solid var(--color-accent);color:var(--color-accent);border-radius:var(--radius);font-size:0.75rem;cursor:pointer;">Mark as Read</button>' : ''}
+                        ${waReplyBtn}
                         <button class="msg-del-btn" style="padding:5px 12px;background:transparent;border:1px solid rgba(231,76,60,0.3);color:#e74c3c;border-radius:var(--radius);font-size:0.75rem;cursor:pointer;">Delete</button>
                     </div>
                 `;
