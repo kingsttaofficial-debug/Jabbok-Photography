@@ -286,6 +286,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     } catch (e) { /* ignore parse errors */ }
 
+    // 5b. Apply about content from localStorage
+    try {
+        const aboutContent = JSON.parse(localStorage.getItem('jabbok_about_content'));
+        if (aboutContent) {
+            const headingEl = document.getElementById('aboutHeading');
+            const p1El = document.getElementById('aboutPara1');
+            const p2El = document.getElementById('aboutPara2');
+            const p3El = document.getElementById('aboutPara3');
+            if (headingEl && aboutContent.heading) headingEl.textContent = aboutContent.heading;
+            if (p1El && aboutContent.para1) p1El.textContent = aboutContent.para1;
+            if (p2El && aboutContent.para2) p2El.textContent = aboutContent.para2;
+            if (p3El && aboutContent.para3) p3El.textContent = aboutContent.para3;
+        }
+    } catch (e) { /* ignore parse errors */ }
+
     // 6. Apply testimonials from localStorage
     try {
         const testDeleted = JSON.parse(localStorage.getItem('jabbok_testimonials_deleted')) || [];
@@ -351,10 +366,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                         <h3>${svc.name || ''}</h3>
                         <p>${svc.description || ''}</p>
-                        <div class="service-price">
-                            <span>Starting from</span>
-                            <strong>&#8377;${svc.price || '0'}</strong>
-                        </div>
                         <ul class="service-features">
                             ${featuresHtml}
                         </ul>

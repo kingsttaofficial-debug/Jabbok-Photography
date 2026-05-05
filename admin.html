@@ -403,7 +403,9 @@
             <!-- ====== TAB 3: ABOUT US ====== -->
             <div class="admin-tab-content" id="tab-about">
                 <h3>About Us Manager</h3>
-                <p class="admin-desc">Update the About section image.</p>
+                <p class="admin-desc">Update the About section photo and content. Changes are tracked in history.</p>
+
+                <!-- Photo -->
                 <div class="admin-sub-section">
                     <h4>About Photo</h4>
                     <div class="upload-dropzone small" id="aboutDropzone">
@@ -413,6 +415,43 @@
                         <input type="file" id="aboutFile" accept="image/png, image/jpeg" hidden>
                     </div>
                     <div class="admin-media-list" id="aboutImagePreview"></div>
+                </div>
+
+                <!-- Content Editor -->
+                <div class="admin-sub-section">
+                    <h4>Current Content <span class="badge" style="background:rgba(245,197,24,0.15);color:var(--color-accent);">Live on Site</span></h4>
+                    <div id="aboutCurrentContent" style="background:var(--color-bg);border:1px solid var(--color-border);border-radius:var(--radius);padding:16px;margin-bottom:16px;font-size:0.88rem;line-height:1.6;color:var(--color-text-muted);">
+                        Loading...
+                    </div>
+
+                    <h4 style="margin-top:8px;">Edit Content</h4>
+                    <div class="admin-form-stack">
+                        <div class="admin-field">
+                            <label>Section Heading</label>
+                            <input type="text" id="aboutHeadingInput" placeholder="e.g., Your One-Stop Media Production Partner">
+                        </div>
+                        <div class="admin-field">
+                            <label>Paragraph 1</label>
+                            <textarea id="aboutPara1Input" rows="3" placeholder="First paragraph..."></textarea>
+                        </div>
+                        <div class="admin-field">
+                            <label>Paragraph 2</label>
+                            <textarea id="aboutPara2Input" rows="3" placeholder="Second paragraph..."></textarea>
+                        </div>
+                        <div class="admin-field">
+                            <label>Paragraph 3</label>
+                            <textarea id="aboutPara3Input" rows="3" placeholder="Third paragraph..."></textarea>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary btn-full" id="aboutContentSaveBtn" style="margin-top:8px;"><span>Save Content</span></button>
+                </div>
+
+                <!-- Change History -->
+                <div class="admin-sub-section">
+                    <h4>Content Change History <span class="badge" id="aboutHistoryCount">0</span></h4>
+                    <p class="admin-desc" style="margin-bottom:12px;">A record of all content changes. Click Restore to revert to a previous version.</p>
+                    <div id="aboutHistoryList"></div>
+                    <p class="no-items" id="aboutHistoryEmpty">No changes recorded yet.</p>
                 </div>
             </div>
 

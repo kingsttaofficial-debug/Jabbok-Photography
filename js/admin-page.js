@@ -38,10 +38,10 @@ document.addEventListener('DOMContentLoaded', () => {
             isDefault: true
         },
         {
-            id: 'default-svc-4', name: 'Business Portraits', icon: 'briefcase',
-            desc: 'Elevate your brand with professional headshots and corporate photography for teams and individuals.',
-            price: '50,000', priceLabel: 'Starting from',
-            features: ['Studio & on-location sessions', 'Professional Headshots', 'Product & Promotion Shoots', 'Campaign Shoots'],
+            id: 'default-svc-4', name: 'Music Video Production', icon: 'video',
+            desc: 'High-impact music video production that amplifies your sound with visuals that tell your story.',
+            price: '', priceLabel: '',
+            features: ['Concept & storyboard development', 'Full production crew', 'Professional colour grading', 'Studio & on-location shoots'],
             isDefault: true
         },
         {
@@ -647,6 +647,118 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+        // ── About Content Editor ──
+        const ABOUT_CONTENT_KEY = 'jabbok_about_content';
+        const ABOUT_HISTORY_KEY = 'jabbok_about_history';
+        const DEFAULT_ABOUT_CONTENT = {
+            heading: 'Your One-Stop Media Production Partner',
+            para1: 'Jabbok Pro is a full-service content and media production company delivering world-class visual storytelling. From cinematic wedding films and music videos to corporate productions and event coverage — we bring every vision to life with precision, creativity, and passion.',
+            para2: 'With over 15 years of expertise across photography, videography, and digital content creation, our team combines artistic vision with cutting-edge technology. Whether it\'s a grand wedding, a brand film, or a high-energy music video — we deliver results that exceed expectations.',
+            para3: 'We don\'t just capture moments — we craft experiences. Every frame we shoot is a deliberate expression of the story behind it. At Jabbok Pro, media production isn\'t just a service — it\'s our craft, our culture, and our commitment.'
+        };
+
+        function getAboutContent() {
+            return loadObj(ABOUT_CONTENT_KEY) || DEFAULT_ABOUT_CONTENT;
+        }
+
+        function renderAboutContentPanel() {
+            const content = getAboutContent();
+            // Show current content summary
+            const currentEl = document.getElementById('aboutCurrentContent');
+            if (currentEl) {
+                currentEl.innerHTML = `
+                    <strong style="color:var(--color-white);display:block;margin-bottom:6px;">${content.heading}</strong>
+                    <p style="margin:0 0 6px;">${content.para1}</p>
+                    <p style="margin:0 0 6px;">${content.para2}</p>
+                    <p style="margin:0;">${content.para3}</p>
+                `;
+            }
+            // Pre-fill edit fields
+            const h = document.getElementById('aboutHeadingInput');
+            const p1 = document.getElementById('aboutPara1Input');
+            const p2 = document.getElementById('aboutPara2Input');
+            const p3 = document.getElementById('aboutPara3Input');
+            if (h) h.value = content.heading;
+            if (p1) p1.value = content.para1;
+            if (p2) p2.value = content.para2;
+            if (p3) p3.value = content.para3;
+            // Render history
+            renderAboutHistory();
+        }
+
+        function renderAboutHistory() {
+            const historyListEl = document.getElementById('aboutHistoryList');
+            const historyEmptyEl = document.getElementById('aboutHistoryEmpty');
+            const historyCountEl = document.getElementById('aboutHistoryCount');
+            const history = JSON.parse(localStorage.getItem(ABOUT_HISTORY_KEY) || '[]');
+
+            if (historyCountEl) historyCountEl.textContent = history.length;
+            if (!historyListEl) return;
+            historyListEl.innerHTML = '';
+
+            if (history.length === 0) {
+                if (historyEmptyEl) historyEmptyEl.style.display = 'block';
+                return;
+            }
+            if (historyEmptyEl) historyEmptyEl.style.display = 'none';
+
+            history.forEach((entry, idx) => {
+                const div = document.createElement('div');
+                div.style.cssText = 'background:var(--color-bg);border:1px solid var(--color-border);border-radius:var(--radius);padding:14px;margin-bottom:10px;';
+                div.innerHTML = `
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                        <span style="font-size:0.8rem;color:var(--color-text-muted);">${entry.date}</span>
+                        <div style="display:flex;gap:8px;">
+                            <button class="restore-btn" style="padding:4px 12px;background:transparent;border:1px solid var(--color-accent);color:var(--color-accent);border-radius:var(--radius);font-size:0.72rem;cursor:pointer;">Restore</button>
+                            <button class="del-history-btn" style="padding:4px 10px;background:transparent;border:1px solid rgba(231,76,60,0.3);color:#e74c3c;border-radius:var(--radius);font-size:0.72rem;cursor:pointer;">&times;</button>
+                        </div>
+                    </div>
+                    <strong style="font-size:0.88rem;color:var(--color-white);display:block;margin-bottom:4px;">${entry.heading}</strong>
+                    <p style="font-size:0.78rem;color:var(--color-text-muted);margin:0;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${entry.para1}</p>
+                `;
+                div.querySelector('.restore-btn').addEventListener('click', () => {
+                    // Save current as new history entry before restoring
+                    const current = getAboutContent();
+                    pushAboutHistory(current);
+                    store(ABOUT_CONTENT_KEY, { heading: entry.heading, para1: entry.para1, para2: entry.para2, para3: entry.para3 });
+                    renderAboutContentPanel();
+                    toast('Content restored to version from ' + entry.date);
+                });
+                div.querySelector('.del-history-btn').addEventListener('click', () => {
+                    const h = JSON.parse(localStorage.getItem(ABOUT_HISTORY_KEY) || '[]');
+                    h.splice(idx, 1);
+                    localStorage.setItem(ABOUT_HISTORY_KEY, JSON.stringify(h));
+                    renderAboutHistory();
+                });
+                historyListEl.appendChild(div);
+            });
+        }
+
+        function pushAboutHistory(content) {
+            const history = JSON.parse(localStorage.getItem(ABOUT_HISTORY_KEY) || '[]');
+            history.unshift({ ...content, date: new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }) });
+            // Keep max 20 entries
+            if (history.length > 20) history.pop();
+            localStorage.setItem(ABOUT_HISTORY_KEY, JSON.stringify(history));
+        }
+
+        const aboutContentSaveBtn = document.getElementById('aboutContentSaveBtn');
+        if (aboutContentSaveBtn) {
+            aboutContentSaveBtn.addEventListener('click', () => {
+                const heading = (document.getElementById('aboutHeadingInput').value || '').trim();
+                const para1 = (document.getElementById('aboutPara1Input').value || '').trim();
+                const para2 = (document.getElementById('aboutPara2Input').value || '').trim();
+                const para3 = (document.getElementById('aboutPara3Input').value || '').trim();
+                if (!heading) { toast('Please enter a heading'); return; }
+                // Archive current before saving
+                pushAboutHistory(getAboutContent());
+                store(ABOUT_CONTENT_KEY, { heading, para1, para2, para3 });
+                renderAboutContentPanel();
+                toast('About content saved! Changes are live on the site.');
+            });
+        }
+
+        renderAboutContentPanel();
 
         // ============================================================
         // 4. TESTIMONIALS
