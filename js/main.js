@@ -78,49 +78,60 @@ document.addEventListener('DOMContentLoaded', () => {
         setInterval(nextHeroSlide, 6000);
     }
 
-    // --- Portfolio gallery dropdown filter ---
+    // --- Portfolio filter buttons ---
+    const filterBtns = document.querySelectorAll('.filter-btn');
     const galleryGrid = document.getElementById('galleryGrid');
     const videoGallery = document.getElementById('videoGallery');
-    const galleryDropdown = document.getElementById('galleryDropdown');
-    const galleryLabel = document.getElementById('galleryLabel');
 
     function applyGalleryFilter(filter) {
         if (filter === 'video') {
             if (galleryGrid) galleryGrid.style.display = 'none';
             if (videoGallery) videoGallery.style.display = 'block';
-            if (galleryLabel) galleryLabel.innerHTML = 'Showing: <span>Video Production</span>';
             return;
         }
         if (galleryGrid) galleryGrid.style.display = '';
         if (videoGallery) videoGallery.style.display = 'none';
-        const allItems = galleryGrid ? galleryGrid.querySelectorAll('.gallery-item') : [];
-        let count = 0;
-        allItems.forEach(item => {
-            if (item.style.display === 'none') return; // admin-deleted
-            const matches = !filter || item.dataset.category === filter;
-            if (matches && count < 10) {
+        document.querySelectorAll('.gallery-item').forEach(item => {
+            if (filter === 'all' || item.dataset.category === filter) {
                 item.classList.remove('hidden');
-                count++;
             } else {
                 item.classList.add('hidden');
             }
         });
-        if (galleryLabel) {
-            const labels = { weddings: 'Weddings', portraits: 'Portraits', events: 'Events', corporate: 'Corporate' };
-            galleryLabel.innerHTML = filter
-                ? `Showing: <span>${labels[filter] || filter}</span> — top 10 photos`
-                : 'Select a category to browse';
-        }
     }
 
-    // On load: show all items (no category selected yet — hide nothing)
-    applyGalleryFilter('');
-
-    if (galleryDropdown) {
-        galleryDropdown.addEventListener('change', () => {
-            applyGalleryFilter(galleryDropdown.value);
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            applyGalleryFilter(btn.dataset.filter);
         });
-    }
+    });
+
+    // --- Nav Portfolio dropdown: click a category, scroll + filter ---
+    document.querySelectorAll('.nav-drop-link[data-filter]').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const filter = link.getAttribute('data-filter');
+            // Close mobile nav if open
+            hamburger.classList.remove('active');
+            navLinks.classList.remove('open');
+            document.body.style.overflow = '';
+            // Scroll to portfolio section
+            const portfolioSection = document.getElementById('portfolio');
+            if (portfolioSection) {
+                const offset = header.offsetHeight;
+                window.scrollTo({ top: portfolioSection.offsetTop - offset, behavior: 'smooth' });
+            }
+            // Apply the filter after a short delay so scroll starts first
+            setTimeout(() => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                const matchBtn = document.querySelector(`.filter-btn[data-filter="${filter}"]`);
+                if (matchBtn) matchBtn.classList.add('active');
+                applyGalleryFilter(filter);
+            }, 400);
+        });
+    });
 
     // --- Video sub-filters ---
     const videoSubBtns = document.querySelectorAll('.video-sub-btn');
