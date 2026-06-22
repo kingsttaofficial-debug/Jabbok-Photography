@@ -78,36 +78,49 @@ document.addEventListener('DOMContentLoaded', () => {
         setInterval(nextHeroSlide, 6000);
     }
 
-    // --- Portfolio filter ---
-    const filterBtns = document.querySelectorAll('.filter-btn');
+    // --- Portfolio gallery dropdown filter ---
     const galleryGrid = document.getElementById('galleryGrid');
     const videoGallery = document.getElementById('videoGallery');
-    const galleryItems = document.querySelectorAll('.gallery-item');
+    const galleryDropdown = document.getElementById('galleryDropdown');
+    const galleryLabel = document.getElementById('galleryLabel');
 
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            filterBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-
-            const filter = btn.dataset.filter;
-
-            if (filter === 'video') {
-                galleryGrid.style.display = 'none';
-                videoGallery.style.display = 'block';
+    function applyGalleryFilter(filter) {
+        if (filter === 'video') {
+            if (galleryGrid) galleryGrid.style.display = 'none';
+            if (videoGallery) videoGallery.style.display = 'block';
+            if (galleryLabel) galleryLabel.innerHTML = 'Showing: <span>Video Production</span>';
+            return;
+        }
+        if (galleryGrid) galleryGrid.style.display = '';
+        if (videoGallery) videoGallery.style.display = 'none';
+        const allItems = galleryGrid ? galleryGrid.querySelectorAll('.gallery-item') : [];
+        let count = 0;
+        allItems.forEach(item => {
+            if (item.style.display === 'none') return; // admin-deleted
+            const matches = !filter || item.dataset.category === filter;
+            if (matches && count < 10) {
+                item.classList.remove('hidden');
+                count++;
             } else {
-                galleryGrid.style.display = '';
-                videoGallery.style.display = 'none';
-                const currentItems = document.querySelectorAll('.gallery-item');
-                currentItems.forEach(item => {
-                    if (filter === 'all' || item.dataset.category === filter) {
-                        item.classList.remove('hidden');
-                    } else {
-                        item.classList.add('hidden');
-                    }
-                });
+                item.classList.add('hidden');
             }
         });
-    });
+        if (galleryLabel) {
+            const labels = { weddings: 'Weddings', portraits: 'Portraits', events: 'Events', corporate: 'Corporate' };
+            galleryLabel.innerHTML = filter
+                ? `Showing: <span>${labels[filter] || filter}</span> — top 10 photos`
+                : 'Select a category to browse';
+        }
+    }
+
+    // On load: show all items (no category selected yet — hide nothing)
+    applyGalleryFilter('');
+
+    if (galleryDropdown) {
+        galleryDropdown.addEventListener('change', () => {
+            applyGalleryFilter(galleryDropdown.value);
+        });
+    }
 
     // --- Video sub-filters ---
     const videoSubBtns = document.querySelectorAll('.video-sub-btn');
