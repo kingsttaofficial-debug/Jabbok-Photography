@@ -364,7 +364,6 @@
                 <button class="admin-tab" data-tab="tab-testimonials">Testimonials</button>
                 <button class="admin-tab" data-tab="tab-services">Services</button>
                 <button class="admin-tab" data-tab="tab-contact">Contact</button>
-                <button class="admin-tab" data-tab="tab-blog">Blog</button>
                 <button class="admin-tab" data-tab="tab-videos">Videos</button>
                 <button class="admin-tab" data-tab="tab-messages">Messages <span class="msg-badge" id="msgBadge" style="background:#e74c3c;color:#fff;padding:1px 7px;border-radius:10px;font-size:0.7rem;margin-left:4px;display:none;">0</span></button>
             </div>
@@ -646,60 +645,7 @@
                 </div>
             </div>
 
-            <!-- ====== TAB 7: BLOG ====== -->
-            <div class="admin-tab-content" id="tab-blog">
-                <h3>Blog Manager</h3>
-                <p class="admin-desc">Add, edit, or delete blog posts.</p>
-                <div class="admin-sub-section">
-                    <h4>Add / Edit Blog Post</h4>
-                    <div class="admin-form-stack">
-                        <div class="upload-dropzone small" id="blogImageDropzone">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="32" height="32"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                            <p>Blog cover image (optional)</p>
-                            <span class="upload-formats">PNG, JPEG</span>
-                            <input type="file" id="blogImageFile" accept="image/png, image/jpeg" hidden>
-                        </div>
-                        <div class="upload-preview-container small-preview" id="blogImagePreview" style="display:none;">
-                            <img id="blogImageImg" src="" alt="Blog cover">
-                            <button type="button" class="remove-preview" id="blogRemoveImage">&times;</button>
-                        </div>
-                        <div class="upload-fields">
-                            <div class="admin-field">
-                                <label>Post Title</label>
-                                <input type="text" id="blogTitle" placeholder="e.g., 10 Tips for Golden Hour Photography">
-                            </div>
-                            <div class="admin-field">
-                                <label>Category</label>
-                                <select id="blogCategory">
-                                    <option value="Tips & Tricks">Tips & Tricks</option>
-                                    <option value="Weddings">Weddings</option>
-                                    <option value="Behind the Scenes">Behind the Scenes</option>
-                                    <option value="Corporate">Corporate</option>
-                                    <option value="Events">Events</option>
-                                    <option value="Tutorials">Tutorials</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="admin-field">
-                            <label>Excerpt / Summary</label>
-                            <textarea id="blogExcerpt" rows="2" placeholder="A brief summary of the blog post..."></textarea>
-                        </div>
-                        <div class="admin-field">
-                            <label>Date</label>
-                            <input type="date" id="blogDate">
-                        </div>
-                    </div>
-                    <input type="hidden" id="blogEditId" value="">
-                    <button class="btn btn-primary btn-full" id="blogAddBtn"><span>Add Blog Post</span></button>
-                </div>
-                <div class="admin-sub-section">
-                    <h4>Manage Blog Posts <span class="badge" id="blogCount">0</span></h4>
-                    <div class="admin-blog-list" id="blogList"></div>
-                    <p class="no-items" id="blogEmpty">No custom blog posts added yet.</p>
-                </div>
-            </div>
-
-            <!-- ====== TAB 8: VIDEOS ====== -->
+            <!-- ====== TAB 7: VIDEOS ====== -->
             <div class="admin-tab-content" id="tab-videos">
                 <h3>Video Manager</h3>
                 <p class="admin-desc">Add YouTube videos to the portfolio Video section.</p>

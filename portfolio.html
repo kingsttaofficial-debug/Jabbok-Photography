@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Jabbok Pro Portfolio — Browse our full gallery of wedding photography, portraits, events, corporate films, and video production.">
+    <title>Portfolio — Jabbok Pro</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* ── Portfolio Page Specific ── */
+        .portfolio-hero {
+            background: var(--color-bg-card);
+            border-bottom: 1px solid var(--color-border);
+            padding: 120px 0 60px;
+            text-align: center;
+        }
+        .portfolio-hero .section-subtitle { margin-bottom: 8px; }
+        .portfolio-hero .section-title { font-size: 3rem; margin-bottom: 12px; }
+        .portfolio-hero .title-line { margin: 0 auto 20px; }
+        .portfolio-hero-desc {
+            color: var(--color-text-muted);
+            font-size: 1.05rem;
+            max-width: 560px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        .portfolio-page-section { padding: 60px 0 100px; }
+
+        .portfolio-filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 48px;
+        }
+
+        .portfolio-count {
+            text-align: center;
+            color: var(--color-text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 32px;
+            margin-top: -24px;
+        }
+        .portfolio-count span { color: var(--color-accent); font-weight: 600; }
+
+        .portfolio-full-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .portfolio-full-grid .gallery-item {
+            height: 260px;
+        }
+        .portfolio-full-grid .gallery-item.tall { height: 380px; }
+
+        /* Video section on portfolio page */
+        .portfolio-video-section { margin-top: 60px; }
+        .portfolio-video-section h3 {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            color: var(--color-white);
+            margin-bottom: 6px;
+        }
+        .portfolio-video-section > p {
+            color: var(--color-text-muted);
+            margin-bottom: 28px;
+            font-size: 0.9rem;
+        }
+        .portfolio-empty {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--color-text-muted);
+        }
+        .portfolio-empty svg { opacity: 0.25; margin-bottom: 16px; }
+        .portfolio-empty p { font-size: 1rem; }
+
+        @media (max-width: 768px) {
+            .portfolio-hero { padding: 100px 0 48px; }
+            .portfolio-hero .section-title { font-size: 2rem; }
+            .portfolio-full-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+        }
+        @media (max-width: 480px) {
+            .portfolio-full-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .portfolio-full-grid .gallery-item { height: 180px; }
+            .portfolio-full-grid .gallery-item.tall { height: 260px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <header id="header" class="header-solid">
+        <nav class="navbar">
+            <a href="index.html" class="logo">
+                <span class="logo-text">JABBOK</span>
+                <span class="logo-sub">PRO</span>
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="index.html#portfolio" class="nav-link">Portfolio</a></li>
+                <li><a href="portfolio.html" class="nav-link active">Gallery</a></li>
+                <li><a href="index.html#about" class="nav-link">About</a></li>
+                <li><a href="index.html#services" class="nav-link">Services</a></li>
+                <li><a href="index.html#testimonials" class="nav-link">Testimonials</a></li>
+                <li><a href="index.html#contact" class="nav-link btn-nav">Book Now</a></li>
+            </ul>
+            <button class="hamburger" id="hamburger" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Hero -->
+    <section class="portfolio-hero">
+        <div class="container">
+            <p class="section-subtitle">Our Work</p>
+            <h1 class="section-title">Full Portfolio Gallery</h1>
+            <div class="title-line"></div>
+            <p class="portfolio-hero-desc">Browse our complete collection — weddings, portraits, events, corporate productions, and music videos. Every frame tells a story.</p>
+        </div>
+    </section>
+
+    <!-- Portfolio Listing -->
+    <section class="portfolio-page-section">
+        <div class="container">
+
+            <!-- Filter Buttons -->
+            <div class="portfolio-filter-bar" id="portfolioFilterBar">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="weddings">Weddings</button>
+                <button class="filter-btn" data-filter="portraits">Portraits</button>
+                <button class="filter-btn" data-filter="events">Events</button>
+                <button class="filter-btn" data-filter="corporate">Corporate</button>
+                <button class="filter-btn" data-filter="video">Video Production</button>
+            </div>
+
+            <p class="portfolio-count" id="portfolioCountLabel"><span id="visibleCount">0</span> items</p>
+
+            <!-- Photo Grid -->
+            <div class="portfolio-full-grid" id="portfolioGrid">
+                <!-- Default items -->
+                <div class="gallery-item" data-category="weddings">
+                    <img src="https://images.unsplash.com/photo-1583089892943-e02e5b017b6a?w=600&q=80" alt="Sacred Rituals" loading="lazy">
+                    <div class="gallery-overlay"><span class="gallery-category">Weddings</span><h3>Sacred Rituals</h3></div>
+                </div>
+                <div class="gallery-item tall" data-category="weddings">
+                    <img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=600&q=80" alt="Holy Vows" loading="lazy">
+                    <div class="gallery-overlay"><span class="gallery-category">Weddings</span><h3>Holy Vows</h3></div>
+                </div>
+                <div class="gallery-item" data-category="weddings">
+                    <img src="https://images.unsplash.com/photo-1591604466107-ec97de577aff?w=600&q=80" alt="Divine Union" loading="lazy">
+                    <div class="gallery-overlay"><span class="gallery-category">Weddings</span><h3>Divine Union</h3></div>
+                </div>
+                <div class="gallery-item" data-category="events">
+                    <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&q=80" alt="Grand Gala" loading="lazy">
+                    <div class="gallery-overlay"><span class="gallery-category">Events</span><h3>Grand Gala</h3></div>
+                </div>
+                <div class="gallery-item tall" data-category="weddings">
+                    <img src="https://images.unsplash.com/photo-1604604557852-789b0819e45e?w=600&q=80" alt="Eternal Bond" loading="lazy">
+                    <div class="gallery-overlay"><span class="gallery-category">Weddings</span><h3>Eternal Bond</h3></div>
+                </div>
+                <div class="gallery-item" data-category="portraits">
+                    <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=600&q=80" alt="Bold & Timeless" loading="lazy">
+                    <div class="gallery-overlay"><span class="gallery-category">Portraits</span><h3>Bold &amp; Timeless</h3></div>
+                </div>
+                <div class="gallery-item" data-category="corporate">
+                    <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=600&q=80" alt="Business Vision" loading="lazy">
+                    <div class="gallery-overlay"><span class="gallery-category">Corporate</span><h3>Business Vision</h3></div>
+                </div>
+                <div class="gallery-item" data-category="events">
+                    <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600&q=80" alt="Night Lights" loading="lazy">
+                    <div class="gallery-overlay"><span class="gallery-category">Events</span><h3>Night Lights</h3></div>
+                </div>
+                <div class="gallery-item" data-category="portraits">
+                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=600&q=80" alt="Golden Hour" loading="lazy">
+                    <div class="gallery-overlay"><span class="gallery-category">Portraits</span><h3>Golden Hour</h3></div>
+                </div>
+                <div class="gallery-item" data-category="corporate">
+                    <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&q=80" alt="Team Spirit" loading="lazy">
+                    <div class="gallery-overlay"><span class="gallery-category">Corporate</span><h3>Team Spirit</h3></div>
+                </div>
+                <div class="gallery-item tall" data-category="weddings">
+                    <img src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=600&q=80" alt="Together Forever" loading="lazy">
+                    <div class="gallery-overlay"><span class="gallery-category">Weddings</span><h3>Together Forever</h3></div>
+                </div>
+                <div class="gallery-item" data-category="events">
+                    <img src="https://images.unsplash.com/photo-1505236858219-8359eb29e329?w=600&q=80" alt="Celebration Night" loading="lazy">
+                    <div class="gallery-overlay"><span class="gallery-category">Events</span><h3>Celebration Night</h3></div>
+                </div>
+            </div>
+
+            <!-- Empty state -->
+            <div class="portfolio-empty" id="portfolioEmpty" style="display:none;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" width="64" height="64">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
+                </svg>
+                <p>No items match this filter.</p>
+            </div>
+
+            <!-- Video Production Section -->
+            <div class="portfolio-video-section" id="videoSection" style="display:none;">
+                <h3>Video Production</h3>
+                <p>Watch our cinematic films — weddings, music videos, corporate productions and more.</p>
+
+                <!-- Video Sub-filters -->
+                <div class="video-sub-filters" style="margin-bottom:24px;">
+                    <button class="video-sub-btn active" data-vfilter="all">All Videos</button>
+                    <button class="video-sub-btn" data-vfilter="wedding">Wedding</button>
+                    <button class="video-sub-btn" data-vfilter="events">Events</button>
+                    <button class="video-sub-btn" data-vfilter="corporate">Corporate</button>
+                </div>
+
+                <div class="video-player-area">
+                    <div class="video-main" id="videoMain">
+                        <div class="video-placeholder">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="64" height="64"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                            <p>Select a video to play</p>
+                        </div>
+                    </div>
+                    <div class="video-playlist" id="videoPlaylist">
+                        <div class="playlist-header">
+                            <h4>Playlist</h4>
+                            <span id="videoPlaylistCount">0 videos</span>
+                        </div>
+                        <div class="playlist-items" id="playlistItems">
+                            <p class="no-items" id="videoEmpty">No videos added yet. Add videos from the Admin Panel.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="index.html" class="logo">
+                        <span class="logo-text">JABBOK</span>
+                        <span class="logo-sub">PRO</span>
+                    </a>
+                    <p>Your one-stop media production partner — photography, videography, music videos, corporate films &amp; more. Available worldwide.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="portfolio.html">Gallery</a></li>
+                        <li><a href="index.html#about">About</a></li>
+                        <li><a href="index.html#services">Services</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="index.html#services">Wedding Photography</a></li>
+                        <li><a href="index.html#services">Portrait Sessions</a></li>
+                        <li><a href="index.html#services">Event Coverage</a></li>
+                        <li><a href="index.html#services">Music Video Production</a></li>
+                        <li><a href="index.html#services">Wedding Videos</a></li>
+                        <li><a href="index.html#services">Corporate Film</a></li>
+                    </ul>
+                </div>
+                <div class="footer-social">
+                    <h4>Follow Us</h4>
+                    <div class="social-links">
+                        <a href="#" aria-label="Instagram" class="social-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
+                        <a href="#" aria-label="Facebook" class="social-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a>
+                        <a href="#" aria-label="Twitter" class="social-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Jabbok Pro. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" aria-label="Close lightbox">&times;</button>
+        <button class="lightbox-prev" aria-label="Previous image">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button class="lightbox-next" aria-label="Next image">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+        <div class="lightbox-content">
+            <img id="lightboxImg" src="" alt="Gallery image">
+        </div>
+    </div>
+
+    <!-- Back to Top -->
+    <button class="back-to-top" id="backToTop" aria-label="Back to top">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg>
+    </button>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // --- Header scroll effect ---
+        const header = document.getElementById('header');
+        const backToTop = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            header.classList.toggle('scrolled', window.scrollY > 80);
+            backToTop.classList.toggle('visible', window.scrollY > 500);
+        });
+        backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+        // --- Mobile nav ---
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navLinks.classList.toggle('open');
+            document.body.style.overflow = navLinks.classList.contains('open') ? 'hidden' : '';
+        });
+        navLinks.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('open');
+                document.body.style.overflow = '';
+            });
+        });
+
+        // ── Load admin-added portfolio items from localStorage ──
+        const DEFAULT_PORTFOLIO_IDS = [
+            'default-port-1','default-port-2','default-port-3','default-port-4',
+            'default-port-5','default-port-6','default-port-7','default-port-8',
+            'default-port-9','default-port-10','default-port-11','default-port-12'
+        ];
+
+        try {
+            const grid = document.getElementById('portfolioGrid');
+            const deletedIds = JSON.parse(localStorage.getItem('jabbok_portfolio_deleted') || '[]');
+
+            // Hide deleted default items
+            const defaultItems = grid.querySelectorAll('.gallery-item');
+            deletedIds.forEach(id => {
+                const idx = parseInt(id.replace('default-port-', ''), 10) - 1;
+                if (!isNaN(idx) && defaultItems[idx]) defaultItems[idx].style.display = 'none';
+            });
+
+            // Append custom uploaded items
+            const saved = JSON.parse(localStorage.getItem('jabbok_portfolio') || '[]');
+            saved.forEach(photo => {
+                const div = document.createElement('div');
+                div.className = 'gallery-item';
+                div.setAttribute('data-category', photo.category || 'all');
+                div.innerHTML = `
+                    <img src="${photo.url || photo.dataUrl || ''}" alt="${photo.title || ''}" loading="lazy">
+                    <div class="gallery-overlay">
+                        <span class="gallery-category">${photo.category ? photo.category.charAt(0).toUpperCase() + photo.category.slice(1) : ''}</span>
+                        <h3>${photo.title || ''}</h3>
+                    </div>
+                `;
+                grid.appendChild(div);
+            });
+        } catch(e) {}
+
+        // ── Load admin-added videos from localStorage ──
+        try {
+            const savedVideos = JSON.parse(localStorage.getItem('jabbok_videos') || '[]');
+            if (savedVideos.length) {
+                const playlistItems = document.getElementById('playlistItems');
+                const videoEmpty = document.getElementById('videoEmpty');
+                if (videoEmpty) videoEmpty.style.display = 'none';
+                savedVideos.forEach(v => {
+                    const div = document.createElement('div');
+                    div.className = 'playlist-item';
+                    div.setAttribute('data-vcategory', v.category || 'all');
+                    div.onclick = function() { playYouTubeVideo(v.ytId, this); };
+                    div.innerHTML = `
+                        <img src="https://img.youtube.com/vi/${v.ytId}/mqdefault.jpg" alt="${v.title || ''}">
+                        <span>${v.title || 'Untitled'}</span>
+                    `;
+                    playlistItems.appendChild(div);
+                });
+                const countEl = document.getElementById('videoPlaylistCount');
+                if (countEl) countEl.textContent = savedVideos.length + ' video' + (savedVideos.length !== 1 ? 's' : '');
+            }
+        } catch(e) {}
+
+        window.playYouTubeVideo = function(videoId, itemEl) {
+            const mainPlayer = document.getElementById('videoMain');
+            mainPlayer.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+            document.querySelectorAll('.playlist-item').forEach(el => el.classList.remove('active'));
+            if (itemEl) itemEl.classList.add('active');
+        };
+
+        // ── Filter logic ──
+        const filterBtns = document.querySelectorAll('#portfolioFilterBar .filter-btn');
+        const grid = document.getElementById('portfolioGrid');
+        const videoSection = document.getElementById('videoSection');
+        const countLabel = document.getElementById('visibleCount');
+        const emptyEl = document.getElementById('portfolioEmpty');
+
+        function updateCount() {
+            const visible = grid.querySelectorAll('.gallery-item:not(.hidden):not([style*="display: none"])').length;
+            countLabel.textContent = visible;
+            emptyEl.style.display = (visible === 0 && videoSection.style.display === 'none') ? 'block' : 'none';
+        }
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const filter = btn.dataset.filter;
+
+                if (filter === 'video') {
+                    grid.style.display = 'none';
+                    videoSection.style.display = 'block';
+                    document.getElementById('portfolioCountLabel').style.display = 'none';
+                } else {
+                    grid.style.display = '';
+                    videoSection.style.display = 'none';
+                    document.getElementById('portfolioCountLabel').style.display = '';
+                    grid.querySelectorAll('.gallery-item').forEach(item => {
+                        if (item.style.display === 'none') return; // skip admin-deleted
+                        if (filter === 'all' || item.dataset.category === filter) {
+                            item.classList.remove('hidden');
+                        } else {
+                            item.classList.add('hidden');
+                        }
+                    });
+                    updateCount();
+                }
+            });
+        });
+
+        // ── Video sub-filters ──
+        document.querySelectorAll('.video-sub-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.video-sub-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const vfilter = btn.dataset.vfilter;
+                let count = 0;
+                document.querySelectorAll('.playlist-item').forEach(item => {
+                    if (vfilter === 'all' || item.dataset.vcategory === vfilter) {
+                        item.style.display = '';
+                        count++;
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+                const countEl = document.getElementById('videoPlaylistCount');
+                if (countEl) countEl.textContent = count + ' video' + (count !== 1 ? 's' : '');
+            });
+        });
+
+        // Initial count
+        updateCount();
+
+        // ── Lightbox ──
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightboxImg');
+        let lightboxImages = [];
+        let lightboxIndex = 0;
+
+        function getVisibleImages() {
+            return Array.from(grid.querySelectorAll('.gallery-item:not(.hidden):not([style*="display: none"]) img'));
+        }
+
+        function openLightbox(index) {
+            lightboxImages = getVisibleImages();
+            lightboxIndex = index;
+            lightboxImg.src = lightboxImages[lightboxIndex].src.replace('w=600', 'w=1200');
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        function navigateLightbox(dir) {
+            lightboxIndex = (lightboxIndex + dir + lightboxImages.length) % lightboxImages.length;
+            lightboxImg.src = lightboxImages[lightboxIndex].src.replace('w=600', 'w=1200');
+        }
+
+        grid.addEventListener('click', e => {
+            const item = e.target.closest('.gallery-item');
+            if (!item) return;
+            const imgs = getVisibleImages();
+            const img = item.querySelector('img');
+            const idx = imgs.indexOf(img);
+            if (idx !== -1) openLightbox(idx);
+        });
+
+        document.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+        document.querySelector('.lightbox-prev').addEventListener('click', () => navigateLightbox(-1));
+        document.querySelector('.lightbox-next').addEventListener('click', () => navigateLightbox(1));
+        lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+        document.addEventListener('keydown', e => {
+            if (!lightbox.classList.contains('active')) return;
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowLeft') navigateLightbox(-1);
+            if (e.key === 'ArrowRight') navigateLightbox(1);
+        });
+
+        // ── Scroll reveal ──
+        const revealEls = document.querySelectorAll('.gallery-item, .section-header');
+        revealEls.forEach(el => el.classList.add('reveal'));
+        function checkReveal() {
+            revealEls.forEach(el => {
+                if (el.getBoundingClientRect().top < window.innerHeight * 0.9) el.classList.add('visible');
+            });
+        }
+        window.addEventListener('scroll', checkReveal);
+        checkReveal();
+
+    });
+    </script>
+</body>
+</html>

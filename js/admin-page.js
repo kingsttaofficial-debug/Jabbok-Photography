@@ -83,24 +83,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     ];
 
-    const DEFAULT_BLOG = [
-        {
-            id: 'default-blog-1', title: '10 Tips for Stunning Golden Hour Photography', category: 'Tips & Tricks',
-            excerpt: 'Master the art of shooting during the magical golden hour with these simple yet powerful techniques...',
-            date: 'Mar 15, 2026', image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600&q=80', isDefault: true
-        },
-        {
-            id: 'default-blog-2', title: 'How to Prepare for Your Wedding Photoshoot', category: 'Weddings',
-            excerpt: 'Everything you need to know to make sure your wedding photos are absolutely perfect on the big day...',
-            date: 'Feb 28, 2026', image: 'https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=600&q=80', isDefault: true
-        },
-        {
-            id: 'default-blog-3', title: 'My Journey Capturing the Northern Lights', category: 'Behind the Scenes',
-            excerpt: 'A behind-the-scenes look at my recent expedition to Iceland in pursuit of the aurora borealis...',
-            date: 'Feb 10, 2026', image: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=600&q=80', isDefault: true
-        }
-    ];
-
     const DEFAULT_PORTFOLIO = [
         { id: 'default-port-1', title: 'Sacred Rituals', category: 'weddings', dataUrl: 'https://images.unsplash.com/photo-1583089892943-e02e5b017b6a?w=600&q=80', isDefault: true },
         { id: 'default-port-2', title: 'Holy Vows', category: 'weddings', dataUrl: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=600&q=80', isDefault: true },
@@ -138,8 +120,6 @@ document.addEventListener('DOMContentLoaded', () => {
         servicesDeleted: 'jabbok_services_deleted',
         contact: 'jabbok_contact',
         branches: 'jabbok_branches',
-        blog: 'jabbok_blog',
-        blogDeleted: 'jabbok_blog_deleted',
         videos: 'jabbok_videos'
     };
     const CAT_LABELS = {
@@ -1030,133 +1010,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
         // ============================================================
-        // 7. BLOG
-        // ============================================================
-        const blogListEl = document.getElementById('blogList');
-        const blogCountEl = document.getElementById('blogCount');
-        const blogEmptyEl = document.getElementById('blogEmpty');
-        const blogEditIdEl = document.getElementById('blogEditId');
-        let blogImageData = null;
-
-        setupDropzone(document.getElementById('blogImageDropzone'), document.getElementById('blogImageFile'), {
-            onFiles: async (files) => {
-                const file = files[0];
-                if (!file || !validImg(file)) return;
-                blogImageData = await readFile(file);
-                document.getElementById('blogImageImg').src = blogImageData;
-                document.getElementById('blogImagePreview').style.display = 'block';
-                document.getElementById('blogImageDropzone').style.display = 'none';
-            }
-        });
-
-        document.getElementById('blogRemoveImage').addEventListener('click', () => {
-            blogImageData = null;
-            document.getElementById('blogImagePreview').style.display = 'none';
-            document.getElementById('blogImageDropzone').style.display = 'block';
-        });
-
-        document.getElementById('blogAddBtn').addEventListener('click', () => {
-            const title = document.getElementById('blogTitle').value.trim();
-            const category = document.getElementById('blogCategory').value;
-            const excerpt = document.getElementById('blogExcerpt').value.trim();
-            const dateVal = document.getElementById('blogDate').value;
-            if (!title) { toast('Blog title is required'); return; }
-
-            const dateStr = dateVal ? new Date(dateVal + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-
-            const editId = blogEditIdEl.value;
-            let arr = load(KEYS.blog);
-
-            if (editId) {
-                // Check if editing a default blog post
-                const defaultBlog = DEFAULT_BLOG.find(b => b.id === editId);
-                if (defaultBlog) {
-                    const deleted = load(KEYS.blogDeleted);
-                    deleted.push(editId);
-                    store(KEYS.blogDeleted, deleted);
-                    arr.push({ id: uid(), title, category, excerpt, date: dateStr, image: blogImageData || defaultBlog.image });
-                } else {
-                    const idx = arr.findIndex(b => b.id === editId);
-                    if (idx !== -1) arr[idx] = { ...arr[idx], title, category, excerpt, date: dateStr, image: blogImageData || arr[idx].image };
-                }
-                blogEditIdEl.value = '';
-                document.getElementById('blogAddBtn').querySelector('span').textContent = 'Add Blog Post';
-            } else {
-                arr.push({ id: uid(), title, category, excerpt, date: dateStr, image: blogImageData || null });
-            }
-
-            store(KEYS.blog, arr);
-            renderBlogs();
-            document.getElementById('blogTitle').value = '';
-            document.getElementById('blogExcerpt').value = '';
-            document.getElementById('blogDate').value = '';
-            blogImageData = null;
-            document.getElementById('blogImagePreview').style.display = 'none';
-            document.getElementById('blogImageDropzone').style.display = 'block';
-            toast(editId ? 'Blog post updated!' : 'Blog post added!');
-        });
-
-        function renderBlogs() {
-            const deletedIds = load(KEYS.blogDeleted);
-            const userItems = load(KEYS.blog);
-            const activeDefaults = DEFAULT_BLOG.filter(d => !deletedIds.includes(d.id));
-            const allItems = [...activeDefaults, ...userItems];
-
-            blogListEl.innerHTML = '';
-            blogCountEl.textContent = allItems.length;
-            blogEmptyEl.style.display = allItems.length === 0 ? 'block' : 'none';
-
-            allItems.forEach(blog => {
-                const card = document.createElement('div');
-                card.className = 'admin-blog-card';
-                const isDefault = blog.isDefault;
-                const imgHTML = blog.image ? `<img src="${blog.image}" alt="${blog.title}">` : '<div class="blog-card-placeholder">&#9998;</div>';
-                card.innerHTML = `
-                    ${imgHTML}
-                    <div class="blog-card-body">
-                        <strong>${blog.title}</strong>${isDefault ? ' <span style="color:var(--color-accent);font-size:0.7rem;">(Default)</span>' : ''}
-                        <div class="blog-card-meta">${blog.category} &bull; ${blog.date}</div>
-                        <p>${blog.excerpt || ''}</p>
-                    </div>
-                    <div class="blog-card-actions">
-                        <button class="bc-edit" title="Edit">&#9998;</button>
-                        <button class="bc-del" title="Delete">&times;</button>
-                    </div>
-                `;
-                card.querySelector('.bc-edit').addEventListener('click', () => {
-                    document.getElementById('blogTitle').value = blog.title;
-                    document.getElementById('blogCategory').value = blog.category;
-                    document.getElementById('blogExcerpt').value = blog.excerpt || '';
-                    blogEditIdEl.value = blog.id;
-                    if (blog.image) {
-                        blogImageData = blog.image;
-                        document.getElementById('blogImageImg').src = blog.image;
-                        document.getElementById('blogImagePreview').style.display = 'block';
-                        document.getElementById('blogImageDropzone').style.display = 'none';
-                    }
-                    document.getElementById('blogAddBtn').querySelector('span').textContent = 'Update Blog Post';
-                    toast('Editing: ' + blog.title);
-                });
-                card.querySelector('.bc-del').addEventListener('click', () => {
-                    if (isDefault) {
-                        const deleted = load(KEYS.blogDeleted);
-                        deleted.push(blog.id);
-                        store(KEYS.blogDeleted, deleted);
-                    } else {
-                        let data = load(KEYS.blog);
-                        data = data.filter(x => x.id !== blog.id);
-                        store(KEYS.blog, data);
-                    }
-                    renderBlogs();
-                    toast('Blog post deleted');
-                });
-                blogListEl.appendChild(card);
-            });
-        }
-
-
-        // ============================================================
-        // 8. VIDEOS
+        // 7. VIDEOS
         // ============================================================
         const videoListEl = document.getElementById('videoList');
         const videoCountEl = document.getElementById('videoCount');
@@ -1223,7 +1077,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
         // ============================================================
-        // 9. MESSAGES (Contact Form Submissions)
+        // 8. MESSAGES (Contact Form Submissions)
         // ============================================================
         const messageListEl = document.getElementById('messageList');
         const messageEmptyEl = document.getElementById('messageEmpty');
@@ -1311,7 +1165,6 @@ document.addEventListener('DOMContentLoaded', () => {
         renderServices();
         loadContactFields();
         renderBranches();
-        renderBlogs();
         renderVideos();
         renderMessages();
 

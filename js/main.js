@@ -177,43 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     } catch (e) { /* ignore parse errors */ }
 
-    // 2. Load blog posts from localStorage
-    try {
-        const deletedBlogs = JSON.parse(localStorage.getItem('jabbok_blog_deleted')) || [];
-        const blogGrid = document.querySelector('.blog-grid');
-        if (blogGrid) {
-            const defaultBlogCards = blogGrid.querySelectorAll('article.blog-card');
-            deletedBlogs.forEach(id => {
-                const idx = parseInt(id.toString().replace('default-blog-', ''), 10) - 1;
-                if (!isNaN(idx) && defaultBlogCards[idx]) {
-                    defaultBlogCards[idx].style.display = 'none';
-                }
-            });
-
-            const savedBlogs = JSON.parse(localStorage.getItem('jabbok_blog'));
-            if (savedBlogs && savedBlogs.length) {
-                savedBlogs.forEach(b => {
-                    const article = document.createElement('article');
-                    article.className = 'blog-card';
-                    article.innerHTML = `
-                        <div class="blog-image">
-                            <img src="${b.image || 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600&q=80'}" alt="${b.title || ''}" loading="lazy">
-                            <span class="blog-date">${b.date || ''}</span>
-                        </div>
-                        <div class="blog-content">
-                            <span class="blog-category">${b.category || ''}</span>
-                            <h3>${b.title || ''}</h3>
-                            <p>${b.excerpt || ''}</p>
-                            <a href="blog.html" class="blog-link">Read More <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
-                        </div>
-                    `;
-                    blogGrid.appendChild(article);
-                });
-            }
-        }
-    } catch (e) { /* ignore parse errors */ }
-
-    // 3. Apply hero changes from localStorage
+    // 2. Apply hero changes from localStorage
     try {
         const heroDeleted = JSON.parse(localStorage.getItem('jabbok_hero_deleted')) || [];
         const heroSlider = document.querySelector('.hero-slider');
